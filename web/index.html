@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <title>CrushBench host</title>
@@ -84,7 +84,7 @@
     if (window.CRUSH_CONFIG.realtime) {
       const hud = document.getElementById("hud");
       hud.style.display = "block";
-      const tick = setInterval(() => {
+      setInterval(() => {
         if (typeof player.cb_setRealtime !== "function") return;
         player.cb_setRealtime(true);
         const s = JSON.parse(player.cb_getState());

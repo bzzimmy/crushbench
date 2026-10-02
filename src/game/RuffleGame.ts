@@ -1,4 +1,4 @@
-import { chromium, type Browser, type Page } from "playwright";
+import { type Browser, chromium, type Page } from "playwright";
 import { startGameServer } from "./server";
 import type { GameState, Move, SwapResult } from "./types";
 
@@ -26,7 +26,9 @@ export class RuffleGame {
     const browser = await chromium.launch({ headless: options.headless ?? true });
     const page = await browser.newPage({ viewport: { width: 755, height: 600 }, deviceScaleFactor: 1 });
     page.on("pageerror", (e) => console.error("[page]", e.message));
-    const cfg = encodeURIComponent(JSON.stringify({ seed: options.seed, timeLimitSeconds: options.timeLimitSeconds ?? 240 }));
+    const cfg = encodeURIComponent(
+      JSON.stringify({ seed: options.seed, timeLimitSeconds: options.timeLimitSeconds ?? 240 }),
+    );
     await page.goto(`${server.url}/#${cfg}`);
     // Wait for the bridge to register its callbacks on the player element.
     await page.waitForFunction(() => typeof (window as any).player?.cb_ping === "function", null, { timeout: 30_000 });
@@ -36,10 +38,10 @@ export class RuffleGame {
   }
 
   private call<T>(name: string, ...args: unknown[]): Promise<T> {
-    return this.page.evaluate(
-      ([n, a]) => (window as any).player[n](...(a as unknown[])),
-      [name, args] as const,
-    ) as Promise<T>;
+    return this.page.evaluate(([n, a]) => (window as any).player[n](...(a as unknown[])), [
+      name,
+      args,
+    ] as const) as Promise<T>;
   }
 
   async ping(): Promise<string> {

@@ -11,13 +11,17 @@
     "smoke": "bun run scripts/smoke.ts",
     "random": "bun run scripts/randomgame.ts",
     "typecheck": "tsc -p .",
-    "play": "bun run scripts/play.ts"
+    "play": "bun run scripts/play.ts",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "check": "tsc -p . && biome check ."
   },
   "dependencies": {
     "@ruffle-rs/ruffle": "^0.6.0",
     "playwright": "^1.63.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
     "@types/node": "^26.6.4",
     "bun-types": "^1.4.2",
     "typescript": "^7.0.2"

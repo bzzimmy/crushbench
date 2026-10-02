@@ -1,6 +1,7 @@
 // Human play: serve the game with the clock on wall time, one URL per benchmark seed.
-import { startGameServer } from "../src/game/server";
+
 import { SEEDS } from "../src/bench/seeds";
+import { startGameServer } from "../src/game/server";
 
 const server = startGameServer(4321);
 const url = (seed: number) => `${server.url}/#${encodeURIComponent(JSON.stringify({ seed, realtime: true }))}`;

@@ -1,7 +1,7 @@
 // Smoke test: boot the patched SWF in Ruffle, play a few legal moves, save screenshots.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { RuffleGame } from "../src/game/RuffleGame";
-import { colorName, specialName, type GameState } from "../src/game/types";
+import { colorName, type GameState, specialName } from "../src/game/types";
 
 function render(s: GameState): string {
   const glyph = { none: ".", blue: "B", green: "G", orange: "O", purple: "P", red: "R", yellow: "Y" };
@@ -12,7 +12,8 @@ function render(s: GameState): string {
           if (!c) return " _ ";
           const col = glyph[colorName(c[0])];
           const sp = specialName(c[1]);
-          const mark = sp === "none" ? " " : sp === "colorbomb" ? "*" : sp === "wrapped" ? "w" : sp === "striped-h" ? "-" : "|";
+          const mark =
+            sp === "none" ? " " : sp === "colorbomb" ? "*" : sp === "wrapped" ? "w" : sp === "striped-h" ? "-" : "|";
           return ` ${col}${mark}`;
         })
         .join(""),
@@ -50,7 +51,10 @@ s = await game.state();
 let illegal: [number, number, number, number] | null = null;
 outer: for (let y = 0; y < s.height; y++)
   for (let x = 0; x + 1 < s.width; x++)
-    if (!(await game.isLegal([x, y, x + 1, y]))) { illegal = [x, y, x + 1, y]; break outer; }
+    if (!(await game.isLegal([x, y, x + 1, y]))) {
+      illegal = [x, y, x + 1, y];
+      break outer;
+    }
 if (illegal) {
   const r = await game.swap(illegal);
   console.log(`illegal swap(${illegal}) legal=${r.legal} accepted=${r.accepted} +${r.scoreDelta} ticks=${r.ticks}`);
