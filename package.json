@@ -12,11 +12,13 @@
     "random": "bun run scripts/randomgame.ts",
     "typecheck": "tsc -p .",
     "play": "bun run scripts/play.ts",
+    "bench": "bun run scripts/bench.ts",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "check": "tsc -p . && biome check ."
   },
   "dependencies": {
+    "@earendil-works/pi-ai": "^1.0.0",
     "@ruffle-rs/ruffle": "^0.6.0",
     "playwright": "^1.63.0"
   },

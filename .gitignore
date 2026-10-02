@@ -6,3 +6,6 @@ game/original/
 game/build/
 game/decompiled/
 tools/ffdec/
+.env
+crushbench.json
+results/
