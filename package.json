@@ -10,7 +10,8 @@
     "build:swf": "./tools/ffdec.sh -importScript game/original/CandyCrush.swf game/build/CandyCrush.swf game/patch/scripts",
     "smoke": "bun run scripts/smoke.ts",
     "random": "bun run scripts/randomgame.ts",
-    "typecheck": "tsc -p ."
+    "typecheck": "tsc -p .",
+    "play": "bun run scripts/play.ts"
   },
   "dependencies": {
     "@ruffle-rs/ruffle": "^0.6.0",

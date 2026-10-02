@@ -17,6 +17,7 @@ package
    import com.midasplayer.time.ITimer;
    import flash.events.Event;
    import flash.external.ExternalInterface;
+   import flash.utils.getTimer;
    import com.midasplayer.games.candycrush.ReplayEngineFactory;
    import com.midasplayer.time.AdjustableTimer;
    import com.midasplayer.time.ITimer;
@@ -60,13 +61,25 @@ package
       
       private static var _benchMain:BenchMain;
       
-      /** The engine is created when BenchMain hits the stage; pick it up then. */
+      /** True when a human is playing: the clock follows wall time instead of the bridge. */
+      public static var realtime:Boolean = false;
+      
+      private static var _lastWallMs:int = -1;
+      
       private function _onBenchFrame(param1:Event) : void
       {
-         if(ensureEngine())
+         ensureEngine();
+         var _loc2_:int = getTimer();
+         if(realtime && _lastWallMs >= 0)
          {
-            removeEventListener(Event.ENTER_FRAME,_onBenchFrame);
+            timer.time += _loc2_ - _lastWallMs;
          }
+         _lastWallMs = _loc2_;
+      }
+      
+      public static function setRealtime(param1:Boolean) : void
+      {
+         realtime = param1;
       }
       
       public static function ensureEngine() : Boolean
@@ -141,6 +154,7 @@ package
          ExternalInterface.addCallback("cb_legalMoves",legalMovesJson);
          ExternalInterface.addCallback("cb_isLegal",isLegalMove);
          ExternalInterface.addCallback("cb_setHints",setHints);
+         ExternalInterface.addCallback("cb_setRealtime",setRealtime);
       }
 
       public static function ping() : String

@@ -7,11 +7,12 @@
   html, body { margin: 0; background: #000; }
   #container { width: 755px; height: 600px; }
   ruffle-player { width: 755px; height: 600px; display: block; }
+  #hud { display: none; color: #ccc; font: 14px monospace; padding: 8px; }
 </style>
 <script>
   // Config arrives in the URL hash as JSON: {"seed":123,"timeLimitSeconds":240,"sound":false}
   window.CRUSH_CONFIG = Object.assign(
-    { seed: 1, timeLimitSeconds: 240, isShortGame: false },
+    { seed: 1, timeLimitSeconds: 240, isShortGame: false, realtime: false },
     JSON.parse(decodeURIComponent(location.hash.slice(1) || "") || "{}")
   );
 
@@ -73,12 +74,30 @@
     const player = ruffle.createPlayer();
     document.getElementById("container").appendChild(player);
     window.player = player;
+    // Ruffle shows a "hardware acceleration disabled" modal in headless Chromium; it would
+    // cover the board in screenshots and swallow clicks. There is no config switch for it.
+    const modal = player.shadowRoot?.getElementById("hardware-acceleration-modal");
+    if (modal) modal.style.display = "none";
     player.ruffle().load({ url: "/CandyCrush.swf", allowScriptAccess: true });
+
+    // Human play: run the clock on wall time and show a HUD to read the result off.
+    if (window.CRUSH_CONFIG.realtime) {
+      const hud = document.getElementById("hud");
+      hud.style.display = "block";
+      const tick = setInterval(() => {
+        if (typeof player.cb_setRealtime !== "function") return;
+        player.cb_setRealtime(true);
+        const s = JSON.parse(player.cb_getState());
+        hud.textContent = `seed ${window.CRUSH_CONFIG.seed}   score ${s.score ?? 0}   level ${s.level ?? 1}   ${s.phase}` +
+          (s.done ? `   FINAL SCORE ${s.score}` : "");
+      }, 500);
+    }
   });
 </script>
 <script src="/ruffle/ruffle.js"></script>
 </head>
 <body>
   <div id="container"></div>
+  <pre id="hud"></pre>
 </body>
 </html>
