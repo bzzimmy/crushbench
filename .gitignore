@@ -1,0 +1,7 @@
+node_modules/
+out/
+# King's binaries and decompiled source stay out of git; see tools/fetch-swf.sh
+game/original/
+game/build/
+game/decompiled/
+tools/ffdec/

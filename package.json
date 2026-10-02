@@ -1,0 +1,24 @@
+{
+  "name": "crushbench",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup:ffdec": "./tools/fetch-ffdec.sh",
+    "setup:swf": "./tools/fetch-swf.sh",
+    "decompile": "rm -rf game/decompiled && ./tools/ffdec.sh -export script game/decompiled game/original/CandyCrush.swf",
+    "build:swf": "./tools/ffdec.sh -importScript game/original/CandyCrush.swf game/build/CandyCrush.swf game/patch/scripts",
+    "smoke": "bun run scripts/smoke.ts",
+    "random": "bun run scripts/randomgame.ts",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@ruffle-rs/ruffle": "^0.6.0",
+    "playwright": "^1.63.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "bun-types": "^1.4.2",
+    "typescript": "^7.0.2"
+  }
+}

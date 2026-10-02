@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>CrushBench host</title>
+<style>
+  html, body { margin: 0; background: #000; }
+  #container { width: 755px; height: 600px; }
+  ruffle-player { width: 755px; height: 600px; display: block; }
+</style>
+<script>
+  // Config arrives in the URL hash as JSON: {"seed":123,"timeLimitSeconds":240,"sound":false}
+  window.CRUSH_CONFIG = Object.assign(
+    { seed: 1, timeLimitSeconds: 240, isShortGame: false },
+    JSON.parse(decodeURIComponent(location.hash.slice(1) || "") || "{}")
+  );
+
+  // King's engine asks the host page for its game data (seed + options + strings).
+  // This is the original production protocol; we just answer it ourselves.
+  function gameDataXml(c) {
+    const t = (id, s) => `<text id="${id}">${s}</text>`;
+    return `<gamedata randomseed="${c.seed}" version="1">` +
+      `<musicOn>false</musicOn><soundOn>false</soundOn>` +
+      `<isShortGame>${c.isShortGame ? "true" : "false"}</isShortGame>` +
+      `<booster_1>0</booster_1><booster_2>0</booster_2><booster_3>0</booster_3><booster_4>0</booster_4><booster_5>0</booster_5>` +
+      `<bestScore>0</bestScore><bestChain>0</bestChain><bestLevel>0</bestLevel><bestCrushed>0</bestCrushed><bestMixed>0</bestMixed>` +
+      `<timeLimitSeconds>${c.timeLimitSeconds}</timeLimitSeconds>` +
+      t("intro.time", "The game begins in {0} seconds") +
+      t("intro.title", "Play as follows:") +
+      t("intro.info1", "Match 3 candies of the same colour to crush them. Matching 4 or 5 in different formations creates special candies.") +
+      t("intro.info2", "Combine special candies by swapping them with each other for bigger effects.") +
+      t("game.nomoves", "No more moves!") +
+      t("outro.opengame", "") +
+      t("outro.title", "Game Over") +
+      t("outro.now", "now") +
+      t("outro.bestever", "best ever") +
+      t("outro.score", "Score") +
+      t("outro.chain", "Longest chain") +
+      t("outro.level", "Level reached") +
+      t("outro.crushed", "Candy crushed") +
+      t("outro.time", "Game ends in {0} seconds") +
+      t("outro.trophy.one", "crushed {0} candy in one game") +
+      t("outro.trophy.two", "scored {0} in one game") +
+      t("outro.trophy.three", "made {0} combined candy in one game") +
+      t("outro.combo_wrapper_line", "wrapped + striped") +
+      t("outro.combo_color_color", "colour bomb + colour bomb") +
+      t("outro.combo_color_line", "colour bomb + striped") +
+      t("outro.combo_color_wrapper", "colour bomb + wrapped") +
+      `</gamedata>`;
+  }
+  window.getGameData = () => ({ success: true, message: gameDataXml(window.CRUSH_CONFIG) });
+  window.__playData = [];
+  window.playData = (s) => { window.__playData.push(s); };
+
+  window.RufflePlayer = window.RufflePlayer || {};
+  window.RufflePlayer.config = {
+    autoplay: "on",
+    unmuteOverlay: "hidden",
+    allowScriptAccess: true,
+    letterbox: "off",
+    scale: "noScale",
+    quality: "high",
+    backgroundColor: "#000000",
+    warnOnUnsupportedContent: false,
+    contextMenu: "off",
+    splashScreen: false,
+    preloader: false,
+    logLevel: "warn",
+  };
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const ruffle = window.RufflePlayer.newest();
+    const player = ruffle.createPlayer();
+    document.getElementById("container").appendChild(player);
+    window.player = player;
+    player.ruffle().load({ url: "/CandyCrush.swf", allowScriptAccess: true });
+  });
+</script>
+<script src="/ruffle/ruffle.js"></script>
+</head>
+<body>
+  <div id="container"></div>
+</body>
+</html>
