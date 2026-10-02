@@ -1,0 +1,1 @@
+Each turn you receive the board as 9 rows of 9 tokens, top row first. A token is a colour letter — B G O P R Y — optionally followed by a special marker: `-` striped row-clearer, `|` striped column-clearer, `+` wrapped, and `*` alone is a colour bomb. Alongside the board you get the score, the level, how many candies this level still needs, and the seconds left on the clock.
