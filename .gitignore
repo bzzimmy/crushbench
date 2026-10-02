@@ -1,5 +1,6 @@
 node_modules/
 out/
+SPEC.md
 # King's binaries and decompiled source stay out of git; see tools/fetch-swf.sh
 game/original/
 game/build/
