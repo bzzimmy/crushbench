@@ -14,10 +14,6 @@ A 9×9 grid of candies in six colours: blue, green, orange, purple, red, yellow.
 - Crushing enough candies finishes the level and deals a fresh board; special candies carry over, and matches score more on higher levels.
 - The clock only runs while candies are moving, so take your time to think. When it runs out, every special candy left on the board detonates for bonus points, so if you have time left you may want to save the best sweets for later.
 
-## Your reply
+## Your move
 
-Think as much as you like, then end your reply with exactly one JSON object on its own line:
-
-{"from": [x, y], "to": [x, y]}
-
-If your move is malformed or not between adjacent cells you will be told why and asked again.
+Think as much as you like, then make one move per turn by calling the `swap` tool with two adjacent cells. The result tells you what happened and shows the new board. If the move is malformed or the cells are not adjacent you will be told why and can try again.
